@@ -2,17 +2,31 @@ import { useVotingdappProgram } from "../votingdapp/votingdapp-data-access";
 
 export function useCandidateScores() {
     const { accounts } = useVotingdappProgram()
+    if (!accounts.data) return
     const candidates = accounts.data && accounts.data.length && accounts.data[0].account.candidates
     if (!candidates) return
 
     let total_votes: number = 0
     candidates.forEach((cand) => {
+        if (!cand.voters.length) return
+
         total_votes += cand.voters.length
     })
 
     const scores: any[] = []
 
+    console.log(candidates)
+
     candidates.map((cand) => {
+        if (!cand.voters.length) {
+            scores.push({
+                label: cand.name,
+                value: 0
+            })
+
+            return
+        }
+
         scores.push({
             label: cand.name,
             value: calculatePercentage(cand.voters.length, total_votes)

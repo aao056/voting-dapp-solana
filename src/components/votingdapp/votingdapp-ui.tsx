@@ -4,6 +4,7 @@ import { ellipsify } from '../ui/ui-layout'
 import { ExplorerLink } from '../cluster/cluster-ui'
 import { useVotingdappProgram, useVotingdapprogramAccount } from './votingdapp-data-access'
 import Image from 'next/image'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 export function VotingDappSystemCreate() {
     const { initialize } = useVotingdappProgram()
@@ -69,6 +70,8 @@ function BlockchainVotingSystemCard({ account, candidates }: { account: PublicKe
         account
     })
 
+    const wallet = useWallet()
+
     const ListCandidates = candidates.map((candidate) =>
         <div key={candidate.id.toString()} className="card bg-base-300 w-96 shadow-2xl mb-6">
             <figure className="px-10 pt-10">
@@ -85,7 +88,7 @@ function BlockchainVotingSystemCard({ account, candidates }: { account: PublicKe
                 <div className="card-actions w-full">
                     <button
                         className="btn btn-primary w-full"
-                        onClick={() => vote.mutateAsync(candidate.id)}>
+                        onClick={() => vote.mutateAsync({ candidateId: candidate.id, signerKey: wallet.publicKey })}>
                         Vote
                     </button>
                 </div>

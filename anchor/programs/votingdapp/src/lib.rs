@@ -2,7 +2,7 @@
 
 use anchor_lang::prelude::*;
 
-declare_id!("FPzzmxm38cjWpiCQzHwF1Gb6stPPxGXGqiA6RZ8WAGNn");
+declare_id!("259gW5LnYKg3PLeu4aBYb8bGRofBAFDnWsFjsTCG1cEq");
 
 #[program]
 pub mod votingdapp {
@@ -46,7 +46,6 @@ pub mod votingdapp {
     /// Casts a vote for a candidate by ID.
     pub fn vote(ctx: Context<Vote>, candidate_id: u16) -> Result<()> {
         let election = &mut ctx.accounts.election;
-
         // Get the current time from the Solana Clock
         let current_time = Clock::get()?.unix_timestamp;
 
@@ -63,11 +62,13 @@ pub mod votingdapp {
             return Err(ErrorCode::AlreadyVoted.into());
         }
 
+        let candidate_name: String;
         if let Some(candidate) = election
             .candidates
             .iter_mut()
             .find(|c: &&mut Candidate| c.id == candidate_id)
         {
+            candidate_name = candidate.name.clone();
             candidate.voters.push(ctx.accounts.signer.key())
         } else {
             return Err(ErrorCode::CandidateNotFound.into());
@@ -76,7 +77,11 @@ pub mod votingdapp {
         // Add the user to the voters list
         election.voters.push(ctx.accounts.signer.key());
 
-        msg!("Vote cast for candidate ID: {}", candidate_id);
+        msg!(
+            "Vote cast for candidate: {} (ID: {})",
+            candidate_name,
+            candidate_id
+        );
         Ok(())
     }
 }
