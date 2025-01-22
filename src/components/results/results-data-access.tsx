@@ -15,8 +15,6 @@ export function useCandidateScores() {
 
     const scores: any[] = []
 
-    console.log(candidates)
-
     candidates.map((cand) => {
         if (!cand.voters.length) {
             scores.push({

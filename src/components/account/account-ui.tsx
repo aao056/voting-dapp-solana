@@ -198,7 +198,7 @@ export function AccountTransactions({ address }: { address: PublicKey }) {
   return (
     <div className="space-y-2">
       <div className="flex justify-between">
-        <h2 className="text-2xl font-bold">Transaction History</h2>
+        <h2 className="text-2xl font-bold">Voting History</h2>
         <div className="space-x-2">
           {query.isLoading ? (
             <span className="loading loading-spinner"></span>
@@ -213,7 +213,7 @@ export function AccountTransactions({ address }: { address: PublicKey }) {
       {query.isSuccess && (
         <div>
           {query.data.length === 0 ? (
-            <div>No transactions found.</div>
+            <div>No votes found.</div>
           ) : (
             <table className="table border-4 rounded-lg border-separate border-base-300">
               <thead>
